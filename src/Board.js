@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Cell from "./Cell";
 import "./Board.css";
-import { cloneDeep } from "lodash";
 
 /** Game board of Lights out.
  *
@@ -58,9 +57,9 @@ function Board({ nrows = 5, ncols = 5, chanceLightStartsOn = 0.25 }) {
 
   /** randomizes t/f tile state */
 
-  function startTilesState(chanceLightStartsOn) {
-    return chanceLightStartsOn > Math.random();
-  }
+  // function startTilesState(chanceLightStartsOn) {
+  //   return chanceLightStartsOn > Math.random();
+  // }
 
   // checks the board in state to determine whether the player has won.
   function hasWon() {
@@ -108,7 +107,7 @@ function Board({ nrows = 5, ncols = 5, chanceLightStartsOn = 0.25 }) {
   for (let y = 0; y < nrows; y++) {
     let row = [];
     for (let x = 0; x < ncols; x++) {
-      let coord = `${y}=${x}`;
+      let coord = `${y}-${x}`;
       row.push(
         < Cell
           key={coord}
