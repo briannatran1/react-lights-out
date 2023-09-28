@@ -28,26 +28,32 @@ import { cloneDeep } from "lodash";
  *
  **/
 
-function Board({ nrows, ncols, chanceLightStartsOn }) {
-  const [board, setBoard] = useState(createBoard());
+function Board({ nrows = 5, ncols = 5, chanceLightStartsOn = 0.25 }) {
+  const [board, setBoard] = useState(createBoard);
 
   /** create a board nrows high/ncols wide, each cell randomly lit or unlit */
   function createBoard() {
-    let initialBoard = [];
+    return Array.from({ length: nrows }).map(
+      row => Array.from({ length: ncols }).map(
+        cell => Math.random() < chanceLightStartsOn
+      )
+    );
+    // let initialBoard = [];
 
-    // creates array-of-arrays of true/false values
-    for (let x = 0; x < nrows; x++) {
-      const createdRow = [];
+    // // creates array-of-arrays of true/false values
+    // for (let x = 0; x < nrows; x++) {
+    //   const createdRow = [];
 
-      for (let y = 0; y < ncols; y++) {
-        // push t or f into created row
-        createdRow.push(startTilesState(chanceLightStartsOn) ? true : false);
-      }
+    //   for (let y = 0; y < ncols; y++) {
+    //     // push t or f into created row
+    //     createdRow.push(startTilesState(chanceLightStartsOn) ? true : false);
+    //   }
 
-      initialBoard.push(createdRow);
-    }
+    //   initialBoard.push(createdRow);
+    // }
 
-    return initialBoard;
+    // return initialBoard;
+
   }
 
   /** randomizes t/f tile state */
@@ -58,7 +64,7 @@ function Board({ nrows, ncols, chanceLightStartsOn }) {
 
   // checks the board in state to determine whether the player has won.
   function hasWon() {
-    return board.every(row => !(row.includes(true)));
+    return board.every(row => row.every(cell => !cell));
   }
 
   function flipCellsAround(coord) {
@@ -73,45 +79,52 @@ function Board({ nrows, ncols, chanceLightStartsOn }) {
         }
       };
 
-      // TODO: Make a (deep) copy of the oldBoard
-      const boardCopy = cloneDeep(oldBoard);
+      // Make a (deep) copy of the oldBoard
+      const boardCopy = oldBoard.map(row => [...row]);
 
-      // TODO: in the copy, flip this cell and the cells around it
-      const neighborTiles = [[x, y][x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]];
-      neighborTiles.map((coord) => flipCell(coord[0], coord[1], boardCopy));
+      // in the copy, flip this cell and the cells around it
+      // const neighborTiles = [[x, y][x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]];
+      // neighborTiles.map((coord) => flipCell(coord[0], coord[1], boardCopy));
 
-      // {
-      //   if (coord[0] >= 0 && coord[0] < ncols && coord[1] >= 0 && coord[1] < nrows) {
-      //   boardCopy[coord[1]][coord[0]] = !boardCopy[coord[1]][coord[0]];
-      // } })
+      flipCell(y, x, boardCopy);
+      flipCell(y, x - 1, boardCopy);
+      flipCell(y, x + 1, boardCopy);
+      flipCell(y - 1, x, boardCopy);
+      flipCell(y + 1, x, boardCopy);
 
-      // TODO: return the copy
+      //return the copy
       return boardCopy;
     });
   }
 
   // if the game is won, just show a winning msg & render nothing else
+  if (hasWon()) {
+    return <div>You win!</div>;
+  }
 
-  // TODO
+  // make table board: rows of Cell components
+  let tableBoard = [];
 
-  // make table board
+  for (let y = 0; y < nrows; y++) {
+    let row = [];
+    for (let x = 0; x < ncols; x++) {
+      let coord = `${y}=${x}`;
+      row.push(
+        < Cell
+          key={coord}
+          isLit={board[y][x]}
+          flipCellsAroundMe={evt => flipCellsAround(coord)}
+        />,
+      );
+    }
+    tableBoard.push(<tr key={y}>{row}</tr>);
+  }
+
   return (
-    <div className="lights-out-board">
-      {
-        board.map((row, idx) =>
-          row.map(col =>
-            <Cell idx={idx}
-              flipCellsAroundMe={flipCellsAround}
-              isLit={col} />
-          ))
-      }
-
-
-
-    </div>
+    <table className="Board">
+      <tbody>{tableBoard}</tbody>
+    </table>
   );
-
-  // TODO
 }
 
 export default Board;
