@@ -32,34 +32,29 @@ function Board({ nrows = 5, ncols = 5, chanceLightStartsOn = 0.25 }) {
 
   /** create a board nrows high/ncols wide, each cell randomly lit or unlit */
   function createBoard() {
-    return Array.from({ length: nrows }).map(
-      row => Array.from({ length: ncols }).map(
-        cell => Math.random() < chanceLightStartsOn
-      )
-    );
-    // let initialBoard = [];
+    let initialBoard = [];
 
-    // // creates array-of-arrays of true/false values
-    // for (let x = 0; x < nrows; x++) {
-    //   const createdRow = [];
+    // creates array-of-arrays of true/false values
+    for (let x = 0; x < nrows; x++) {
+      const createdRow = [];
 
-    //   for (let y = 0; y < ncols; y++) {
-    //     // push t or f into created row
-    //     createdRow.push(startTilesState(chanceLightStartsOn) ? true : false);
-    //   }
+      for (let y = 0; y < ncols; y++) {
+        // push t or f into created row
+        createdRow.push(startTilesState(chanceLightStartsOn) ? true : false);
+      }
 
-    //   initialBoard.push(createdRow);
-    // }
+      initialBoard.push(createdRow);
+    }
 
-    // return initialBoard;
+    return initialBoard;
 
   }
 
   /** randomizes t/f tile state */
 
-  // function startTilesState(chanceLightStartsOn) {
-  //   return chanceLightStartsOn > Math.random();
-  // }
+  function startTilesState(chanceLightStartsOn) {
+    return chanceLightStartsOn > Math.random();
+  }
 
   // checks the board in state to determine whether the player has won.
   function hasWon() {
