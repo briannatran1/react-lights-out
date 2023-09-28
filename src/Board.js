@@ -33,8 +33,26 @@ function Board({ nrows, ncols, chanceLightStartsOn }) {
   /** create a board nrows high/ncols wide, each cell randomly lit or unlit */
   function createBoard() {
     let initialBoard = [];
+
     // TODO: create array-of-arrays of true/false values
+    for (let x = 0; x < nrows; x++) {
+      const createdRow = [];
+
+      for (let y = 0; y < ncols; y++) {
+        // push t or f into created row
+        createdRow.push(startTilesState(chanceLightStartsOn) ? 't' : 'f');
+      }
+
+      initialBoard.push(createdRow);
+    }
+
     return initialBoard;
+  }
+
+  /** randomizes t/f tile state */
+
+  function startTilesState(chanceLightStartsOn) {
+    return chanceLightStartsOn > Math.random();
   }
 
   function hasWon() {
